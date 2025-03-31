@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>مرحبًا، <span id="username-display"></span>!</h2>
+        <button onclick="logout()">تسجيل الخروج</button>
+
+        <h3>إضافة مستخدم جديد</h3>
+        <input type="text" id="new-username" placeholder="اسم المستخدم">
+        <input type="password" id="new-password" placeholder="كلمة المرور">
+        <button onclick="addUser()">إضافة</button>
+        
+        <h3>قائمة المستخدمين</h3>
+        <ul id="user-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

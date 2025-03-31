@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تعديل القضية</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body style="background-color: #121212; color: white; font-family: Arial, sans-serif; text-align: center;">
+
+  <div class="form-container" style="margin-top: 50px;">
+    <h2 style="color: #00ff99;">🛠️ تعديل بيانات القضية</h2>
+
+    <form id="editCaseForm">
+
+      <label for="caseTitle">عنوان القضية:</label><br>
+      <input type="text" id="caseTitle" name="caseTitle" required><br><br>
+
+      <label for="clientName">اسم العميل:</label><br>
+      <input type="text" id="clientName" name="clientName" required><br><br>
+
+      <label for="court">المحكمة:</label><br>
+      <input type="text" id="court" name="court" required><br><br>
+
+      <label for="date">تاريخ الجلسة:</label><br>
+      <input type="date" id="date" name="date" required><br><br>
+
+      <!-- تعديل المستندات -->
+      <label for="wordFile">📝 مستند Word جديد (اختياري):</label><br>
+      <input type="file" id="wordFile" name="wordFile" accept=".doc,.docx"><br><br>
+
+      <label for="caseImages">📸 صور مستندات جديدة (اختياري):</label><br>
+      <input type="file" id="caseImages" name="caseImages[]" accept="image/*" multiple><br><br>
+
+      <button type="submit" style="background-color: #00ff99; padding: 10px 20px;">💾 حفظ التعديلات</button>
+    </form>
+
+    <br>
+    <button onclick="window.history.back()" style="background-color: #555; color: white;">🔙 رجوع</button>
+  </div>
+
+  <script>
+    // محاكاة تحميل بيانات القضية القديمة
+    window.onload = function () {
+      // بيانات تجريبية - هتتعوض بالبيانات الحقيقية من التخزين أو السيرفر
+      document.getElementById("caseTitle").value = "قضية تجريبية";
+      document.getElementById("clientName").value = "أحمد علي";
+      document.getElementById("court").value = "محكمة القاهرة";
+      document.getElementById("date").value = "2025-04-10";
+    };
+
+    // حفظ التعديلات (محاكاة)
+    document.getElementById("editCaseForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("✅ تم حفظ التعديلات بنجاح (محاكاة)");
+      // هنا تقدر تضيف كود إرسال البيانات للسيرفر أو تخزينها
+    });
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔑 تسجيل الدخول</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        /* ===== الهيدر الأزرق المتوهج ===== */
+        .header {
+            background: linear-gradient(45deg, #0077ff, #00ccff);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 153, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .office-name {
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .developer {
+            font-size: 16px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* ===== صندوق تسجيل الدخول ===== */
+        .login-container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 0px 15px rgba(0, 153, 255, 0.4);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: #2e2e2e;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0077ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(0, 119, 255, 0.5);
+        }
+
+        button:hover {
+            background-color: #0055cc;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 119, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== الهيدر الأزرق الفاخر ===== -->
+    <div class="header">
+        <div class="office-name">⚖ مكتب محمد منطاوي ⚖</div>
+        <div class="developer">🚀 تطوير: Lime Glitch</div>
+    </div>
+
+    <div class="login-container">
+        <h2>🔑 تسجيل الدخول</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="📌 اسم المستخدم أو رقم الهاتف" required><br>
+            <input type="password" id="password" placeholder="🔒 كلمة المرور" required><br>
+            <button type="submit">🚀 دخول</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const usernameOrPhone = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find(u => (u.username === usernameOrPhone || u.phone === usernameOrPhone) && u.password === password);
+
+            if (user) {
+                localStorage.setItem("currentUser", JSON.stringify(user));
+                alert(`مرحبًا ${user.fullName} 👋`);
+
+                // تحويل حسب نوع الحساب
+                if (user.role === "admin") {
+                    window.location.href = "admin_dashboard.html";
+                } else {
+                    window.location.href = "lawyer_dashboard.html";
+                }
+            } else {
+                alert("❌ اسم المستخدم أو كلمة المرور غير صحيحة!");
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 القضايا</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="office-name">📌 مكتب محمد منطاوي</div>
+        <div class="developer">🚀 تطوير Lime Glitch</div>
+    </div>
+
+    <div class="container">
+        <h2>📄 قائمة القضايا</h2>
+
+        <button onclick="openCaseForm()">➕ إضافة قضية جديدة</button>
+        <button onclick="window.location.href='old_cases.html'">📂 متابعة القضايا القديمة</button>
+
+        <table class="cases-table" id="casesTable">
+            <thead>
+                <tr>
+                    <th>رقم القضية</th>
+                    <th>الموكل</th>
+                    <th>المحكمة</th>
+                    <th>المحامي المسؤول</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="casesBody">
+                <!-- القضايا التي ستُضاف هنا -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- نافذة إدخال بيانات القضية -->
+    <div id="caseForm" class="modal">
+        <div class="modal-content">
+            <h2>➕ إضافة قضية جديدة</h2>
+            <input type="text" id="caseNumber" placeholder="رقم القضية" required>
+            <input type="text" id="clientName" placeholder="اسم الموكل" required>
+            <input type="text" id="courtName" placeholder="المحكمة" required>
+            <input type="text" id="lawyerName" placeholder="المحامي المسؤول" required>
+            <select id="caseStatus">
+                <option value="متداولة">متداولة</option>
+                <option value="مغلقة">مغلقة</option>
+                <option value="جلسة قادمة">جلسة قادمة</option>
+            </select>
+            <button onclick="addCase()">✅ حفظ القضية</button>
+            <button onclick="closeCaseForm()">❌ إلغاء</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

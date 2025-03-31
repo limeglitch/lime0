@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة العملاء</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="clients-container">
+        <h2>📁 إدارة العملاء</h2>
+        <form id="add-client-form">
+            <input type="text" id="client-name" placeholder="اسم العميل" required>
+            <input type="file" id="client-doc" accept=".pdf, .doc, .docx" required>
+            <button type="submit">➕ إضافة العميل</button>
+        </form>
+        <ul id="clients-list"></ul>
+        <button onclick="window.location.href='admin_dashboard.html'">🔙 العودة</button>
+    </div>
+
+    <script src="clients.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>📋 جميع مصاريف المحامين</title>
+  <style>
+    body {
+      background-color: #000;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      padding: 30px;
+    }
+    .expense-box {
+      background-color: #1a1a1a;
+      padding: 15px;
+      margin: 15px auto;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      text-align: right;
+      position: relative;
+    }
+    .total {
+      color: #00ffcc;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    .delete-all-btn {
+      background: crimson;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .delete-btn {
+      background: orange;
+      color: black;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📋 جميع مصاريف المحامين</h2>
+
+  <!-- زر حذف الكل -->
+  <button class="delete-all-btn" onclick="deleteAllExpenses()">🗑️ حذف جميع المصاريف</button>
+
+  <div id="expenses-container"></div>
+  <div class="total" id="total-expenses"></div>
+
+  <script>
+    let total = 0;
+    const container = document.getElementById("expenses-container");
+
+    function renderExpenses() {
+      container.innerHTML = '';
+      total = 0;
+
+      for (let key in localStorage) {
+        if (key.startsWith("expenses_")) {
+          let userExpenses = JSON.parse(localStorage.getItem(key)) || [];
+          let username = key.replace("expenses_", "");
+
+          userExpenses.forEach((exp, index) => {
+            total += parseFloat(exp.amount);
+
+            let div = document.createElement("div");
+            div.className = "expense-box";
+            div.innerHTML = `
+              <input type="checkbox" data-user="${username}" data-index="${index}" style="float: left;">
+              👤 <strong>${username}</strong><br>
+              💰 <strong>${exp.amount} جنيه</strong><br>
+              🧾 ${exp.type}<br>
+              🗓️ ${exp.date}<br>
+              📝 ${exp.note || "لا توجد ملاحظات"}
+            `;
+            container.appendChild(div);
+          });
+        }
+      }
+
+      document.getElementById("total-expenses").innerText =
+        `✅ إجمالي كل المحامين: ${total} جنيه`;
+    }
+
+    // حذف كل المصاريف
+    function deleteAllExpenses() {
+      if (confirm("هل أنت متأكد أنك تريد حذف كل المصاريف؟")) {
+        for (let key in localStorage) {
+          if (key.startsWith("expenses_")) {
+            localStorage.removeItem(key);
+          }
+        }
+        renderExpenses();
+      }
+    }
+
+    // حذف المحدد
+    const deleteSelectedBtn = document.createElement("button");
+    deleteSelectedBtn.className = "delete-btn";
+    deleteSelectedBtn.textContent = "🗑️ حذف المحدد";
+    deleteSelectedBtn.onclick = function () {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+      const expensesMap = {};
+
+      checkboxes.forEach(cb => {
+        const username = cb.dataset.user;
+        const index = parseInt(cb.dataset.index);
+        if (!expensesMap[username]) expensesMap[username] = [];
+        expensesMap[username].push(index);
+      });
+
+      for (let user in expensesMap) {
+        let userKey = "expenses_" + user;
+        let current = JSON.parse(localStorage.getItem(userKey) || "[]");
+        let updated = current.filter((_, i) => !expensesMap[user].includes(i));
+        localStorage.setItem(userKey, JSON.stringify(updated));
+      }
+
+      renderExpenses();
+    };
+
+    document.body.insertBefore(deleteSelectedBtn, container);
+    renderExpenses();
+  </script>
+
+</body>
+</html>

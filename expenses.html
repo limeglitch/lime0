@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المصاريف</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>📊 إدارة المصاريف</h2>
+        <div id="expenses-container"></div>
+        <button onclick="window.location.href='admin_dashboard.html'">🔙 الرجوع للوحة التحكم</button>
+    </div>
+
+    <script src="script_admin.js"></script>
+</body>
+</html>
+if (localStorage.getItem("userType") !== "lawyer") {
+    alert("غير مصرح لك بالدخول هنا!");
+    window.location.href = "login.html";
+}

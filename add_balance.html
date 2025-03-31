@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>💰 التحكم في رصيد المحامي</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      padding: 30px;
+    }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .actions {
+      margin-top: 20px;
+    }
+    .balances {
+      margin-top: 40px;
+      border-top: 1px solid #555;
+      padding-top: 20px;
+      text-align: right;
+      direction: rtl;
+    }
+  </style>
+</head>
+<body>
+  <h2>💰 التحكم في رصيد المحامي</h2>
+
+  <input type="text" id="lawyer-username" placeholder="اسم المستخدم (المحامي)">
+  <input type="number" id="amount" placeholder="المبلغ بالجنيه">
+
+  <div class="actions">
+    <button onclick="addBalance()">➕ إضافة</button>
+    <button onclick="deductBalance()">➖ خصم</button>
+    <button onclick="resetBalance()">🧹 تصفير رصيد</button>
+    <button onclick="showAllBalances()">📋 عرض كل الأرصدة</button>
+  </div>
+
+  <div class="balances" id="balances-list">
+    <!-- هنا هتظهر كل الأرصدة -->
+  </div>
+
+  <script>
+    function getBalanceKey(username) {
+      return `balance_${username}`;
+    }
+
+    function getSpentKey(username) {
+      return `spent_${username}`;
+    }
+
+    function addBalance() {
+      const username = document.getElementById("lawyer-username").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      if (!username || isNaN(amount) || amount <= 0) {
+        alert("❌ يرجى إدخال اسم ومبلغ صحيح.");
+        return;
+      }
+
+      // لو المحامي مش موجود في localStorage لأول مرة، نبدأ بـ 0
+      let current = parseFloat(localStorage.getItem(getBalanceKey(username))) || 0;
+      let updated = current + amount;
+      localStorage.setItem(getBalanceKey(username), updated);
+
+      alert(`✅ تم إضافة ${amount} جنيه إلى ${username}.`);
+      showAllBalances();
+    }
+
+    function deductBalance() {
+      const username = document.getElementById("lawyer-username").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      if (!username || isNaN(amount) || amount <= 0) {
+        alert("❌ يرجى إدخال اسم ومبلغ صحيح.");
+        return;
+      }
+
+      const balanceKey = getBalanceKey(username);
+      const spentKey = getSpentKey(username);
+
+      if (!localStorage.getItem(balanceKey)) {
+        alert("❌ هذا المستخدم غير موجود.");
+        return;
+      }
+
+      let currentBalance = parseFloat(localStorage.getItem(balanceKey)) || 0;
+      let currentSpent = parseFloat(localStorage.getItem(spentKey)) || 0;
+      let available = currentBalance - currentSpent;
+
+      if (amount > available) {
+        alert(`⚠️ لا يمكن خصم ${amount} جنيه لأن الرصيد المتاح هو ${available} جنيه فقط.`);
+        return;
+      }
+
+      let newSpent = currentSpent + amount;
+      localStorage.setItem(spentKey, newSpent);
+
+      alert(`✅ تم خصم ${amount} جنيه من ${username}.`);
+      showAllBalances();
+    }
+
+    function resetBalance() {
+      const username = document.getElementById("lawyer-username").value.trim();
+      if (!username) {
+        alert("❌ يرجى إدخال اسم المستخدم.");
+        return;
+      }
+
+      const balanceKey = getBalanceKey(username);
+      const spentKey = getSpentKey(username);
+
+      if (!localStorage.getItem(balanceKey)) {
+        alert("❌ هذا المستخدم غير موجود.");
+        return;
+      }
+
+      if (confirm(`⚠️ هل أنت متأكد من تصفير حساب ${username}؟`)) {
+        localStorage.removeItem(balanceKey);
+        localStorage.removeItem(spentKey);
+        alert(`🧹 تم تصفير حساب ${username}.`);
+        showAllBalances();
+      }
+    }
+
+    function showAllBalances() {
+      const balancesDiv = document.getElementById("balances-list");
+      balancesDiv.innerHTML = "";
+
+      let found = false;
+
+      for (let key in localStorage) {
+        if (key.startsWith("balance_")) {
+          let username = key.replace("balance_", "");
+          let totalAdded = parseFloat(localStorage.getItem(getBalanceKey(username))) || 0;
+          let totalSpent = parseFloat(localStorage.getItem(getSpentKey(username))) || 0;
+          let net = totalAdded - totalSpent;
+
+          balancesDiv.innerHTML += `<p>👤 <strong>${username}</strong> — 💰 الرصيد الحالي: ${net} جنيه (تم إضافة: ${totalAdded} - مصروف: ${totalSpent})</p>`;
+          found = true;
+        }
+      }
+
+      if (!found) {
+        balancesDiv.innerHTML = "<p>لا يوجد أرصدة مسجلة حتى الآن.</p>";
+      }
+    }
+
+    window.onload = showAllBalances;
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>متابعة القضايا القديمة</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    #searchInput {
+      width: 50%;
+    }
+    .case {
+      background-color: #1e1e1e;
+      margin: 10px auto;
+      padding: 15px;
+      width: 60%;
+      border: 1px solid #00ff99;
+      border-radius: 5px;
+      text-align: right;
+    }
+    .delete-btn {
+      background-color: crimson;
+      color: white;
+      float: left;
+      margin-top: 10px;
+    }
+    .edit-btn {
+      background-color: #ffaa00;
+      color: white;
+      float: left;
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📂 القضايا القديمة</h2>
+
+  <!-- البحث -->
+  <input type="text" id="searchInput" placeholder="🔍 ابحث باسم القضية..." oninput="filterCases()" />
+
+  <!-- عرض القضايا -->
+  <div id="casesContainer"></div>
+
+  <script>
+    let cases = JSON.parse(localStorage.getItem("cases")) || [];
+
+    const casesContainer = document.getElementById("casesContainer");
+
+    function displayCases(list) {
+      casesContainer.innerHTML = "";
+      if (list.length === 0) {
+        casesContainer.innerHTML = "<p>لا توجد قضايا لعرضها.</p>";
+        return;
+      }
+
+      list.forEach((c, index) => {
+        const caseDiv = document.createElement("div");
+        caseDiv.className = "case";
+        caseDiv.innerHTML = `
+          <strong>📌 الاسم:</strong> ${c.name}<br>
+          <strong>📝 التفاصيل:</strong> ${c.details}<br><br>
+          <button class="edit-btn" onclick="editCase(${index})">✏️ تعديل</button>
+          <button class="delete-btn" onclick="deleteCase(${index})">🗑️ حذف</button>
+        `;
+        casesContainer.appendChild(caseDiv);
+      });
+    }
+
+    function filterCases() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = cases.filter(c => c.name.toLowerCase().includes(query));
+      displayCases(filtered);
+    }
+
+    function deleteCase(index) {
+      if (confirm("⚠️ هل أنت متأكد أنك تريد حذف هذه القضية؟")) {
+        cases.splice(index, 1);
+        localStorage.setItem("cases", JSON.stringify(cases));
+        filterCases(); // إعادة التصفية بعد الحذف
+      }
+    }
+
+    function editCase(index) {
+      const updatedName = prompt("✏️ ادخل الاسم الجديد للقضية:", cases[index].name);
+      const updatedDetails = prompt("📝 ادخل التفاصيل الجديدة:", cases[index].details);
+
+      if (updatedName && updatedDetails) {
+        cases[index].name = updatedName;
+        cases[index].details = updatedDetails;
+        localStorage.setItem("cases", JSON.stringify(cases));
+        filterCases();
+      }
+    }
+
+    // عرض الكل أول مرة
+    displayCases(cases);
+  </script>
+
+</body>
+</html>

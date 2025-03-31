@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الحسابات</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>إدارة الحسابات</h2>
+
+        <!-- 📌 نموذج إنشاء حساب -->
+        <h3>➕ إنشاء حساب جديد</h3>
+        <form id="add-user-form">
+            <input type="text" id="full-name" placeholder="الاسم الكامل" required>
+            <input type="text" id="phone-number" placeholder="رقم الهاتف" required>
+            <input type="text" id="new-username" placeholder="اسم المستخدم" required>
+            <input type="password" id="new-password" placeholder="كلمة المرور" required>
+            <select id="user-role">
+                <option value="lawyer">محامي</option>
+                <option value="admin">أدمن</option>
+            </select>
+            <button type="submit">✅ إنشاء الحساب</button>
+        </form>
+        
+        <!-- 📌 إشعار بعد إنشاء الحساب -->
+        <p id="success-message" style="color: green; display: none;">✅ تم إنشاء الحساب بنجاح!</p>
+
+        <!-- 📌 قائمة الحسابات -->
+        <h3>👥 قائمة الحسابات</h3>
+        <ul id="user-list"></ul>
+
+        <button id="logout-btn">🔓 تسجيل الخروج</button>
+    </div>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        function saveUsers() {
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        function renderUsers() {
+            const userList = document.getElementById("user-list");
+            userList.innerHTML = "";
+
+            users.forEach((user, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `${user.fullName} - ${user.username} (${user.role}) - ${user.phone} `;
+                
+                // إضافة زر الحذف لو المستخدم أدمن
+                if (currentUser && currentUser.role === "admin") {
+                    li.innerHTML += `<button onclick="deleteUser(${index})">❌ حذف</button>`;
+                }
+                
+                userList.appendChild(li);
+            });
+        }
+
+        function deleteUser(index) {
+            if (!currentUser) return;
+
+            if (confirm("⚠️ هل أنت متأكد من حذف هذا الحساب؟ لا يمكن التراجع!")) {
+                users.splice(index, 1);
+                saveUsers();
+                renderUsers();
+            }
+        }
+
+        document.getElementById("add-user-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // منع إعادة تحميل الصفحة
+
+            const fullName = document.getElementById("full-name").value.trim();
+            const phoneNumber = document.getElementById("phone-number").value.trim();
+            const username = document.getElementById("new-username").value.trim();
+            const password = document.getElementById("new-password").value.trim();
+            const role = document.getElementById("user-role").value;
+
+            if (!fullName || !phoneNumber || !username || !password) {
+                alert("⚠️ يرجى إدخال جميع البيانات!");
+                return;
+            }
+
+            if (users.some(user => user.username === username)) {
+                alert("❌ هذا المستخدم موجود بالفعل!");
+                return;
+            }
+
+            users.push({ fullName, phone: phoneNumber, username, password, role });
+            saveUsers();
+            renderUsers();
+
+            // ✅ عرض رسالة نجاح
+            const successMessage = document.getElementById("success-message");
+            successMessage.style.display = "block";
+            setTimeout(() => { successMessage.style.display = "none"; }, 3000);
+
+            // تصفية الحقول بعد الإضافة
+            document.getElementById("add-user-form").reset();
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", function() {
+            localStorage.removeItem("currentUser");
+            window.location.href = "login.html";
+        });
+
+        renderUsers();
+    </script>
+</body>
+</html>

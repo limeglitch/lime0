@@ -1,0 +1,80 @@
+/* خلفية متحركة بألوان نيون */
+@keyframes neonBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+    background-size: 400% 400%;
+    animation: neonBackground 10s infinite;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* ستايل الحاويات */
+.container {
+    margin: auto;
+    width: 80%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    transition: transform 0.3s;
+}
+
+.container:hover {
+    transform: scale(1.02);
+}
+
+/* زرار نيون متحرك */
+button {
+    background: linear-gradient(90deg, #00ffcc, #ff00ff);
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+button:hover {
+    box-shadow: 0 0 20px #ff00ff;
+    transform: scale(1.05);
+}
+
+/* تأثيرات الإدخال */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: #2e2e2e;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 0 5px #00ffcc;
+    transition: 0.3s;
+}
+
+input:focus {
+    box-shadow: 0 0 10px #ff00ff;
+    outline: none;
+}
+
+/* أنيميشن عند تحميل الصفحة */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container, button, input {
+    animation: fadeIn 1s ease-in-out;
+}
